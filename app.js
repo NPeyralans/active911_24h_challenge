@@ -3,7 +3,7 @@ const express = require('express');
 
 const app = express();
 
-const incidentsRoutes = require('./api/routes/incidents');
+const incidentsRoutes = require('./routes/incidents');
 app.use(express.json());
 app.use('/incidents', incidentsRoutes);
 

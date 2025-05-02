@@ -1,7 +1,10 @@
 /* incidents.js */
 const express = require('express');
+const pool = require('../db');
+const { validationResult } = require('express-validator');
+const validateIncident = require('../middleware/validateIncident');
+
 const router = express.Router();
-const pool = require('../../db');
 
 // GET requests to /incidents
 router.get('/', async (req, res) => {
@@ -45,25 +48,20 @@ router.get('/', async (req, res) => {
 });
 
 // POST requests to /incidents
-router.post('/', async (req, res) => {
-	const allowedTypes = ['fire', 'ems', 'police'];
+router.post('/', validateIncident, async (req, res) => {
+	const errors = validationResult(req);
+	if (!errors.isEmpty()){
+		return res.status(400).json({ errors: errors.array() });
+	}
+
 	const { type, location, description, timestamp } = req.body;
 
-	const normalizedType = type.toLowerCase();
-
-	// Validate input here
-	if (!allowedTypes.includes(normalizedType)){
-		res.status(400).json({
-			error: "Invalid request data",
-			details: "Type must be ems, police, or fire"
-		});
-	}
 	try {
 		const result = await pool.query(
 			`INSERT INTO incidents (type, location, description, timestamp) VALUES ($1, $2, $3, $4) RETURNING *`, [type, location, description, timestamp]
 		);
 	
-	res.status(200).json({
+	res.status(201).json({
 		message: `Successfully added incident to the database!`,
 		data: result.rows[0]
 		});
@@ -97,14 +95,19 @@ router.get('/:incidentId', async (req, res) => {
 });
 
 // PUT requests to /incidents/:id
-router.put('/:incidentId', async (req, res) => {
+router.put('/:incidentId', validateIncident, async (req, res) => {
+	const errors = validationResult(req);
+	if (!errors.isEmpty()){
+		return res.status(400).json({ errors: errors.array() });
+	}
+
 	const id = req.params.incidentId;
-	const { type, location, description } = req.body;
+	const { type, location, description, timestamp } = req.body;
 
 	try {
 		const result = await pool.query(
-			`UPDATE incidents SET type = $1, location = $2, description = $3 WHERE id = $4 RETURNING *`,
-			[type, location, description, id]
+			`UPDATE incidents SET type = $1, location = $2, description = $3, timestamp = $4 WHERE id = $5 RETURNING *`,
+			[type, location, description, timestamp, id]
 		);
 		if (result.rows.length === 0){
 			return res.status(404).json({
