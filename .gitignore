@@ -1,0 +1,15 @@
+# Node dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# Logs and temp files
+*.log 
+*.tmp 
+
+# Ignore my notes
+notes
+
+# Ignore the challenge file
+challenge.pdf

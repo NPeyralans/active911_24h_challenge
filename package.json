@@ -1,0 +1,27 @@
+{
+  "name": "active911_24h_challenge",
+  "version": "1.0.0",
+  "description": "This is a 24 hour programming challenge to see if I can develop a fully functional REST API.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NPeyralans/active911_24h_challenge.git"
+  },
+  "keywords": [
+    "REST",
+    "API"
+  ],
+  "author": "Nikolos Peyralans",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NPeyralans/active911_24h_challenge/issues"
+  },
+  "homepage": "https://github.com/NPeyralans/active911_24h_challenge#readme",
+  "dependencies": {
+    "express": "^5.1.0",
+    "pg": "^8.15.6"
+  }
+}
